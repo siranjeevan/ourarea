@@ -68,8 +68,8 @@ export function Create() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4 pb-20 md:pb-4">
-      <Card className="bg-slate-800/95 border border-emerald-500/30 shadow-xl">
+    <div className="max-w-2xl mx-auto p-4 pb-20 md:pb-4 lg:mt-20">
+      <Card className="bg-white border border-gray-200 shadow-lg rounded-xl">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Send className="h-5 w-5" />
@@ -92,7 +92,7 @@ export function Create() {
                 placeholder="Share something with your neighbors..."
                 value={formData.text}
                 onChange={(e) => setFormData(prev => ({ ...prev, text: e.target.value }))}
-                className="min-h-[120px] resize-none bg-slate-700/50 border-emerald-500/30 text-slate-200 placeholder:text-slate-400"
+                className="min-h-[120px] resize-none bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500"
                 maxLength={500}
               />
               <div className="text-xs text-muted-foreground text-right">

@@ -1,4 +1,4 @@
-import { Home, Search, Plus, User, MapPin } from "lucide-react"
+import { Home, Search, Plus, User, MapPin, Star } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -11,27 +11,18 @@ export function TopNav() {
   
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
+    { icon: Star, label: "Services", path: "/services" },
     { icon: Search, label: "Search", path: "/search" },
     { icon: Plus, label: "Create", path: "/create" },
     { icon: User, label: "Profile", path: "/profile" }
   ]
 
   return (
-    <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-slate-800/95 backdrop-blur-xl border-r border-emerald-500/30 shadow-2xl z-50 flex-col">
-      {/* Header */}
-      <div className="p-6 border-b border-border/50">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent mb-3">NammaOoru</h1>
-        {area && (
-          <Badge variant="secondary" className="flex items-center space-x-1 w-fit bg-emerald-500/20 text-emerald-300 border-emerald-400/30">
-            <MapPin className="h-3 w-3" />
-            <span>{area.name}</span>
-          </Badge>
-        )}
-      </div>
+    <nav className="hidden lg:flex fixed left-0 top-0 h-full w-60 bg-white/95 backdrop-blur-xl border-r border-gray-200 shadow-xl z-50 flex-col">
       
       {/* Navigation Items */}
-      <div className="flex-1 p-4">
-        <div className="space-y-3">
+      <div className="flex-1 p-6 mt-30">
+        <div className="space-y-2">
           {navItems.map(({ icon: Icon, label, path }) => {
             const isActive = location.pathname === path
             return (
@@ -39,10 +30,10 @@ export function TopNav() {
                 <Button
                   variant={isActive ? "default" : "ghost"}
                   className={cn(
-                    "w-full justify-start space-x-3 h-12 rounded-xl transition-all duration-200",
+                    "w-full justify-start space-x-4 h-14 rounded-lg transition-all duration-200 text-left",
                     isActive 
-                      ? "bg-gradient-to-r from-emerald-600 to-teal-600 shadow-lg shadow-emerald-500/25" 
-                      : "hover:bg-slate-700/50 hover:scale-105"
+                      ? "bg-blue-600 text-white shadow-lg hover:bg-blue-700" 
+                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                   )}
                 >
                   <Icon className="h-5 w-5" />
@@ -51,6 +42,18 @@ export function TopNav() {
               </Link>
             )
           })}
+        </div>
+      </div>
+      
+      {/* Footer */}
+      <div className="p-6 border-t border-gray-100 space-y-3">
+        <Link to="/login">
+          <Button variant="outline" className="w-full">
+            Login
+          </Button>
+        </Link>
+        <div className="text-xs text-gray-500 text-center">
+          © 2024 OurArea Platform
         </div>
       </div>
     </nav>

@@ -19,13 +19,13 @@ export function RightSidebar() {
   const otherPeople = suggestedPeople.filter(person => person.area !== area?.name).slice(0, 2)
 
   return (
-    <aside className="hidden xl:flex fixed right-0 top-0 h-full w-80 bg-slate-800/95 backdrop-blur-xl border-l border-emerald-500/30 shadow-2xl z-40 flex-col p-4 overflow-y-auto">
+    <aside className="hidden xl:flex fixed right-0 top-0 h-full w-80 bg-white/95 backdrop-blur-xl border-l border-gray-200 shadow-xl z-40 flex-col p-6 overflow-y-auto lg:mt-20">
       <div className="space-y-6">
         {/* Area People */}
-        <Card className="bg-slate-700/80 border border-emerald-500/25 shadow-lg">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center space-x-2">
-              <Users className="h-5 w-5 text-emerald-400" />
+        <Card className="bg-white border border-gray-200 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg flex items-center space-x-2 text-gray-900">
+              <Users className="h-5 w-5 text-blue-600" />
               <span>People in {area?.name || "Your Area"}</span>
             </CardTitle>
           </CardHeader>
@@ -35,11 +35,11 @@ export function RightSidebar() {
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={person.avatar} alt={person.name} />
-                    <AvatarFallback className="bg-emerald-600 text-slate-100">{person.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="bg-blue-600 text-white">{person.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium text-sm text-slate-200">{person.name}</p>
-                    <p className="text-xs text-slate-400">{person.mutualConnections} mutual</p>
+                    <p className="font-medium text-sm text-gray-900">{person.name}</p>
+                    <p className="text-xs text-gray-500">{person.mutualConnections} mutual</p>
                   </div>
                 </div>
                 <Button size="sm" variant="outline" className="h-8 w-8 p-0">
@@ -53,9 +53,9 @@ export function RightSidebar() {
         </Card>
 
         {/* Nearby Areas */}
-        <Card className="bg-slate-700/80 border border-teal-500/25 shadow-lg">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg">Nearby Areas</CardTitle>
+        <Card className="bg-white border border-gray-200 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg text-gray-900">Nearby Areas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {otherPeople.map(person => (

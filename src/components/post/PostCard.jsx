@@ -54,8 +54,8 @@ export function PostCard({ post, onLikeUpdate, onWishlistUpdate }) {
     : post.text
 
   return (
-    <Card className="w-full bg-slate-800/95 backdrop-blur-md border border-emerald-500/30 shadow-2xl shadow-emerald-500/10 hover:shadow-emerald-500/25 hover:border-emerald-400/50 transition-all duration-300">
-      <CardHeader className="pb-3">
+    <Card className="w-full bg-white border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Avatar className="h-10 w-10">
@@ -70,7 +70,7 @@ export function PostCard({ post, onLikeUpdate, onWishlistUpdate }) {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Badge variant="secondary" className="text-xs bg-emerald-500/20 text-emerald-300 border-emerald-400/30">
+            <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 border-blue-200 font-medium">
               {post.category}
             </Badge>
             <Button variant="ghost" size="icon" className="h-8 w-8">

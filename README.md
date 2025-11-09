@@ -1,4 +1,4 @@
-# NammaOoru - Hyper-Local Social Feed
+# OurArea - Hyper-Local Social Feed
 
 A modern, mobile-first social feed application for hyper-local community engagement built with React, Vite, Tailwind CSS, and shadcn/ui components.
 
@@ -12,6 +12,7 @@ A modern, mobile-first social feed application for hyper-local community engagem
 - 👤 **User Profiles** - Personal posts and saved items management
 - 🎨 **Modern UI** - Built with shadcn/ui components and Tailwind CSS
 - 🔄 **Real-time Updates** - Location change detection with automatic feed refresh
+- ⭐ **Popular Services** - Trending local services with offers, filtering, and favorites
 
 ## Tech Stack
 
@@ -48,19 +49,26 @@ src/
 │   │   └── TopNav.jsx       # Desktop top navigation
 │   ├── post/
 │   │   └── PostCard.jsx     # Reusable post component
+│   ├── ServiceCard.jsx      # Individual service card
+│   ├── ServiceCarousel.jsx  # Horizontal service carousel
+│   ├── ServiceFilters.jsx   # Category and location filters
+│   ├── OffersSheet.jsx      # Service offers modal
 │   └── ui/                  # shadcn/ui components
 │       ├── avatar.jsx
 │       ├── badge.jsx
 │       ├── button.jsx
 │       ├── card.jsx
+│       ├── dialog.jsx
 │       ├── input.jsx
+│       ├── select.jsx
 │       ├── textarea.jsx
 │       └── toast.jsx
 ├── hooks/
 │   ├── useAuth.js          # Authentication hook
 │   ├── useDebounce.js      # Search debouncing
 │   ├── useFeed.js          # Feed data management
-│   └── useGeo.js           # Geolocation handling
+│   ├── useGeo.js           # Geolocation handling
+│   └── useServices.js      # Services data management
 ├── pages/
 │   ├── Create.jsx          # Post creation page
 │   ├── Home.jsx            # Main feed page
@@ -68,6 +76,10 @@ src/
 │   └── Search.jsx          # Search page
 ├── lib/
 │   └── utils.js            # Utility functions
+├── data/
+│   └── services.js         # Mock services data
+├── utils/
+│   └── localStorage.js     # localStorage helper
 └── App.jsx                 # Main app component
 ```
 
@@ -94,6 +106,16 @@ The mock API (`src/api/mockApi.js`) simulates:
 - 5% failure rate for testing error handling
 - Realistic data relationships
 - Easy swap with real endpoints
+
+### Popular Services Feature
+The Popular Services section includes:
+- **Service Cards**: Logo, rating, delivery time, category badges
+- **Horizontal Carousel**: Mobile-optimized scrolling with desktop navigation
+- **Category Filtering**: Food, Taxi, Delivery, Offers with visual chips
+- **Location Filtering**: "Near Me" functionality using geolocation
+- **Offers Modal**: Detailed offers with coupon codes and copy functionality
+- **Favorites**: Save/unsave services with localStorage persistence
+- **External Links**: Open app functionality with toast feedback
 
 ## Converting to Production
 
@@ -144,6 +166,8 @@ The mock API (`src/api/mockApi.js`) simulates:
 - `GET /api/areas?lat={lat}&lng={lng}` - Get nearby areas
 - `GET /api/users/{id}/posts` - Get user posts
 - `GET /api/users/{id}/wishlist` - Get user wishlist
+- `GET /api/services?category={cat}&area={scope}` - Get popular services
+- `GET /api/services/{id}/offers` - Get service offers
 
 ### Environment Variables
 Create `.env` file for production:
@@ -157,10 +181,12 @@ VITE_APP_ENV=production
 
 The app uses shadcn/ui components extensively:
 
-- **Card**: Post containers and profile sections
+- **Card**: Post containers, service cards, and profile sections
 - **Button**: All interactive elements with variants (default, outline, ghost)
-- **Avatar**: User profile pictures with fallbacks
-- **Badge**: Categories and status indicators
+- **Avatar**: User profile pictures and service logos with fallbacks
+- **Badge**: Categories, status indicators, and filter chips
+- **Dialog**: Service offers modal with overlay
+- **Select**: Category and location filtering dropdowns
 - **Input/Textarea**: Form controls
 - **Toast**: Success/error notifications
 
