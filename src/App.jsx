@@ -10,15 +10,18 @@ import { Search } from "@/pages/Search"
 import { Create } from "@/pages/Create"
 import { Profile } from "@/pages/Profile"
 import { Login } from "@/pages/Login"
+import { ProfileSetup } from "@/pages/ProfileSetup"
 
 function AppLayout() {
   const location = useLocation()
   const isAuthPage = location.pathname === '/login'
+  const isProfileSetup = location.pathname === '/profile-setup'
 
-  if (isAuthPage) {
+  if (isAuthPage || isProfileSetup) {
     return (
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/profile-setup" element={<ProfileSetup />} />
       </Routes>
     )
   }
