@@ -13,19 +13,6 @@ import { Login } from "@/pages/Login"
 import { ProfileSetup } from "@/pages/ProfileSetup"
 
 function AppLayout() {
-  const location = useLocation()
-  const isAuthPage = location.pathname === '/login'
-  const isProfileSetup = location.pathname === '/profile-setup'
-
-  if (isAuthPage || isProfileSetup) {
-    return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile-setup" element={<ProfileSetup />} />
-      </Routes>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/50">
       <TopNav />
@@ -50,7 +37,11 @@ function App() {
   return (
     <ToastProvider>
       <Router>
-        <AppLayout />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile-setup" element={<ProfileSetup />} />
+          <Route path="/*" element={<AppLayout />} />
+        </Routes>
       </Router>
     </ToastProvider>
   )
