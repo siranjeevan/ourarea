@@ -48,6 +48,7 @@ export function Login() {
         title: "Success",
         description: "Login successful!"
       })
+      navigate('/profile-setup');
       // Don't navigate here - let AuthGuard handle redirection
     } else {
       addToast({

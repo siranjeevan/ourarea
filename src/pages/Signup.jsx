@@ -74,6 +74,7 @@ export function Signup() {
         title: "Success",
         description: "Account created successfully! You are now logged in."
       })
+      navigate('/home');
     } else {
       addToast({
         title: "Signup Failed",
