@@ -130,10 +130,8 @@ export function ProfileSetup() {
         description: "Profile setup completed successfully!"
       })
       
-      // Wait for Firebase to update, then navigate
-      setTimeout(() => {
-        navigate('/home')
-      }, 2000)
+      // Force reload to update auth state and navigate
+      window.location.reload()
     } catch (error) {
       console.error('Profile setup error:', error)
       addToast({
