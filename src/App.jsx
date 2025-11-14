@@ -27,7 +27,7 @@ function App() {
 
   return (
     <ToastProvider>
-      <Router basename="/ourarea">
+      <Router>
         <Routes>
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
