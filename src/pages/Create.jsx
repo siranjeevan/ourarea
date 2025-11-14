@@ -8,22 +8,36 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useGeo } from "@/hooks/useGeo"
 import { useToast } from "@/components/ui/toast"
-import { mockApi } from "@/api/mockApi"
+import { useAuth } from "@/hooks/useAuth"
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://our-area-backend.onrender.com'
+const TOKEN_KEY = 'ourarea_access_token'
+
+const categories = [
+  "event",
+  "business",
+  "sports",
+  "social",
+  "help",
+  "announcement",
+  "lost_found"
+]
 
 export function Create() {
   const navigate = useNavigate()
   const { area } = useGeo()
   const { addToast } = useToast()
-  
+  const { user } = useAuth()
+
   const [formData, setFormData] = useState({
     text: "",
-    category: "General",
+    category: "event",
     images: []
   })
   const [imagePreview, setImagePreview] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const categories = mockApi.getCategories()
+  const getToken = () => localStorage.getItem(TOKEN_KEY)
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
@@ -37,9 +51,9 @@ export function Create() {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (!formData.text.trim()) {
       addToast({
         title: "Error",
@@ -49,22 +63,72 @@ export function Create() {
       return
     }
 
-    setLoading(true)
-    
-    setTimeout(() => {
+    if (!area) {
       addToast({
-        title: "Success!",
-        description: "Your post has been shared with the community"
+        title: "Error",
+        description: "Unable to determine your location",
+        variant: "destructive"
+      })
+      return
+    }
+
+    const token = getToken()
+    if (!token) {
+      addToast({
+        title: "Error",
+        description: "You must be logged in to create a post",
+        variant: "destructive"
+      })
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/posts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          area_id: area.id,
+          text: formData.text,
+          category: formData.category
+        })
       })
 
-      // Reset form
-      setFormData({ text: "", category: "General", images: [] })
-      setImagePreview(null)
+      if (response.ok) {
+        const data = await response.json()
+        addToast({
+          title: "Success!",
+          description: "Your post has been shared with the community"
+        })
+
+        // Reset form
+        setFormData({ text: "", category: "event", images: [] })
+        setImagePreview(null)
+
+        // Navigate to home
+        navigate("/")
+      } else {
+        const error = await response.json()
+        addToast({
+          title: "Error",
+          description: error.detail || "Failed to create post",
+          variant: "destructive"
+        })
+      }
+    } catch (error) {
+      console.error('Create post error:', error)
+      addToast({
+        title: "Error",
+        description: "Network error occurred",
+        variant: "destructive"
+      })
+    } finally {
       setLoading(false)
-      
-      // Navigate to home
-      navigate("/")
-    }, 1000)
+    }
   }
 
   return (

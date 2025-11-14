@@ -5,7 +5,16 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { PostCard } from "@/components/post/PostCard"
 import { useDebounce } from "@/hooks/useDebounce"
-import { mockApi } from "@/api/mockApi"
+
+const categories = [
+  "event",
+  "business",
+  "sports",
+  "social",
+  "help",
+  "announcement",
+  "lost_found"
+]
 
 export function Search() {
   const [query, setQuery] = useState("")
@@ -14,9 +23,8 @@ export function Search() {
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  
+
   const debouncedQuery = useDebounce(query, 300)
-  const categories = mockApi.getCategories()
 
   useEffect(() => {
     if (debouncedQuery.trim()) {

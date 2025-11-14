@@ -1,19 +1,12 @@
 import { useState, useEffect } from "react"
 import { useToast } from "@/components/ui/toast"
 
-const areas = [
-  { id: 1, name: "Koramangala", lat: 12.9352, lng: 77.6245 },
-  { id: 2, name: "Indiranagar", lat: 12.9719, lng: 77.6412 },
-  { id: 3, name: "Whitefield", lat: 12.9698, lng: 77.7500 },
-  { id: 4, name: "Jayanagar", lat: 12.9279, lng: 77.5937 },
-  { id: 5, name: "HSR Layout", lat: 12.9116, lng: 77.6370 },
-  { id: 6, name: "Electronic City", lat: 12.8456, lng: 77.6603 }
-]
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://our-area-backend.onrender.com'
 
-function getClosestArea(lat, lng) {
+function getClosestArea(areas, lat, lng) {
   return areas.reduce((closest, area) => {
-    const closestDist = Math.abs(closest.lat - lat) + Math.abs(closest.lng - lng)
-    const areaDist = Math.abs(area.lat - lat) + Math.abs(area.lng - lng)
+    const closestDist = Math.abs(closest.center_lat - lat) + Math.abs(closest.center_lng - lng)
+    const areaDist = Math.abs(area.center_lat - lat) + Math.abs(area.center_lng - lng)
     return areaDist < closestDist ? area : closest
   })
 }
@@ -21,28 +14,52 @@ function getClosestArea(lat, lng) {
 export function useGeo() {
   const [location, setLocation] = useState(null)
   const [area, setArea] = useState(null)
+  const [areas, setAreas] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { addToast } = useToast()
 
+  const fetchAreas = async () => {
+    try {
+      // Use mock areas data
+      const mockAreas = [
+        { id: 1, name: "Koramangala", center_lat: 12.9352, center_lng: 77.6245 },
+        { id: 2, name: "Indiranagar", center_lat: 12.9719, center_lng: 77.6412 },
+        { id: 3, name: "Whitefield", center_lat: 12.9698, center_lng: 77.7500 },
+        { id: 4, name: "Jayanagar", center_lat: 12.9279, center_lng: 77.5937 }
+      ]
+      setAreas(mockAreas)
+      return mockAreas
+    } catch (error) {
+      console.error('Error fetching areas:', error)
+      return []
+    }
+  }
+
   useEffect(() => {
-    const updateLocation = (position) => {
+    const updateLocation = async (position) => {
       const { latitude: lat, longitude: lng } = position.coords
       setLocation({ lat, lng })
-      
-      const closestArea = getClosestArea(lat, lng)
-      setArea(closestArea)
+
+      const apiAreas = await fetchAreas()
+      if (apiAreas.length > 0) {
+        const closestArea = getClosestArea(apiAreas, lat, lng)
+        setArea(closestArea)
+      }
       setLoading(false)
       setError(null)
     }
 
-    const handleError = () => {
+    const handleError = async () => {
       setError(null)
       setLoading(false)
-      // Fallback to Koramangala
-      const fallbackArea = areas[0]
-      setArea(fallbackArea)
-      setLocation({ lat: fallbackArea.lat, lng: fallbackArea.lng })
+      // Fallback to first area
+      const apiAreas = await fetchAreas()
+      if (apiAreas.length > 0) {
+        const fallbackArea = apiAreas[0]
+        setArea(fallbackArea)
+        setLocation({ lat: fallbackArea.center_lat, lng: fallbackArea.center_lng })
+      }
     }
 
     if (navigator.geolocation) {

@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { mockApi } from "@/api/mockApi"
 import { useToast } from "@/components/ui/toast"
 
 export function PostCard({ post, onLikeUpdate, onWishlistUpdate }) {

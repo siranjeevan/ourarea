@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { MapPin, Camera, User, Globe, Navigation } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { useToast } from "@/components/ui/toast"
+import { useAuth } from "@/hooks/useAuth"
+import { updateProfile } from "firebase/auth"
+import { auth } from "@/firebase"
 
 export function ProfileSetup() {
+  const navigate = useNavigate()
+  const { addToast } = useToast()
   const [formData, setFormData] = useState({
     username: '',
     profileImage: null,
@@ -68,7 +75,7 @@ export function ProfileSetup() {
     return {
       country: 'India',
       state: 'Tamil Nadu',
-      district: 'Chennai',
+      district: 'Jeevith',
       city: 'Chennai'
     }
   }
@@ -91,15 +98,35 @@ export function ProfileSetup() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    
+
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
+      // Update Firebase user profile with display name
+      if (auth.currentUser && formData.username) {
+        await updateProfile(auth.currentUser, {
+          displayName: formData.username
+        })
+      }
+
+      // Simulate additional profile data saving
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
       console.log('Profile data:', formData)
-      alert('Profile setup completed successfully!')
+      addToast({
+        title: "Success",
+        description: "Profile setup completed successfully!"
+      })
+      
+      // Wait for Firebase to update, then navigate
+      setTimeout(() => {
+        navigate('/home')
+      }, 2000)
     } catch (error) {
-      alert('Failed to setup profile. Please try again.')
+      console.error('Profile setup error:', error)
+      addToast({
+        title: "Error",
+        description: "Failed to setup profile. Please try again.",
+        variant: "destructive"
+      })
     } finally {
       setLoading(false)
     }
@@ -155,7 +182,7 @@ export function ProfileSetup() {
               <label className="text-sm font-medium text-gray-700">Username</label>
               <Input
                 placeholder="Enter your username"
-                value={formData.username}
+                value={formData.username || ''}
                 onChange={(e) => handleInputChange('username', e.target.value)}
                 className="h-12 border-gray-200 focus:border-blue-500"
                 required
@@ -181,7 +208,7 @@ export function ProfileSetup() {
                   <label className="text-sm text-gray-600">Country</label>
                   <Input
                     placeholder="Country"
-                    value={formData.country}
+                    value={formData.country || ''}
                     onChange={(e) => handleInputChange('country', e.target.value)}
                     className="h-11"
                     required
@@ -191,7 +218,7 @@ export function ProfileSetup() {
                   <label className="text-sm text-gray-600">State</label>
                   <Input
                     placeholder="State"
-                    value={formData.state}
+                    value={formData.state || ''}
                     onChange={(e) => handleInputChange('state', e.target.value)}
                     className="h-11"
                     required
@@ -201,7 +228,7 @@ export function ProfileSetup() {
                   <label className="text-sm text-gray-600">District</label>
                   <Input
                     placeholder="District"
-                    value={formData.district}
+                    value={formData.district || ''}
                     onChange={(e) => handleInputChange('district', e.target.value)}
                     className="h-11"
                     required
@@ -211,7 +238,7 @@ export function ProfileSetup() {
                   <label className="text-sm text-gray-600">City</label>
                   <Input
                     placeholder="City"
-                    value={formData.city}
+                    value={formData.city || ''}
                     onChange={(e) => handleInputChange('city', e.target.value)}
                     className="h-11"
                     required
@@ -223,29 +250,13 @@ export function ProfileSetup() {
                 <label className="text-sm text-gray-600">Address Line (Optional)</label>
                 <Input
                   placeholder="Street address, building name, etc."
-                  value={formData.addressLine}
+                  value={formData.addressLine || ''}
                   onChange={(e) => handleInputChange('addressLine', e.target.value)}
                   className="h-11"
                 />
               </div>
 
-              {/* Coordinates Display */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Navigation className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-700">Coordinates</span>
-                </div>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-gray-500">Latitude:</span>
-                    <span className="ml-2 font-mono">{formData.latitude.toFixed(6)}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">Longitude:</span>
-                    <span className="ml-2 font-mono">{formData.longitude.toFixed(6)}</span>
-                  </div>
-                </div>
-              </div>
+
 
               {locationStatus === 'failed' && (
                 <Button
