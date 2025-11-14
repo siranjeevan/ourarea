@@ -21,9 +21,7 @@ export function ProfileSetup() {
     state: '',
     district: '',
     city: '',
-    addressLine: '',
-    latitude: 12.93,
-    longitude: 80.13
+    addressLine: ''
   })
   
   const [imagePreview, setImagePreview] = useState(null)
@@ -56,27 +54,43 @@ export function ProfileSetup() {
       
       setFormData(prev => ({
         ...prev,
-        latitude,
-        longitude,
         ...locationData
       }))
       
       setLocationStatus('detected')
     } catch (error) {
       setLocationStatus('failed')
+      // Keep default values when location detection fails
       console.error('Location detection failed:', error)
     }
   }
 
   const reverseGeocode = async (lat, lng) => {
-    // Simulate API call with mock data for Chennai area
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      // Use OpenStreetMap Nominatim API for reverse geocoding
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`
+      )
+      const data = await response.json()
+      
+      if (data && data.address) {
+        return {
+          country: data.address.country || 'India',
+          state: data.address.state || data.address.region || 'Tamil Nadu',
+          district: data.address.state_district || data.address.county || 'Chennai',
+          city: data.address.city || data.address.town || data.address.village || 'Chennai'
+        }
+      }
+    } catch (error) {
+      console.error('Geocoding failed:', error)
+    }
     
+    // Return empty values if API fails
     return {
-      country: 'India',
-      state: 'Tamil Nadu',
-      district: 'Jeevith',
-      city: 'Chennai'
+      country: '',
+      state: '',
+      district: '',
+      city: ''
     }
   }
 
